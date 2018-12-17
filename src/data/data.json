@@ -1,0 +1,323 @@
+{
+  "classes": [[5, 3, 1], [5, 3, 1], [5, 3, 1]],
+  "teachers": [
+    {
+      "id": "1",
+      "name": "Ade Hekmawati"
+    },
+    {
+      "id": "2",
+      "name": "Asep Saepullah"
+    },
+    {
+      "id": "3",
+      "name": "Neneng Sumiarsih"
+    },
+    {
+      "id": "4",
+      "name": "Restu Rida Harlen"
+    },
+    {
+      "id": "5",
+      "name": "Supriatna"
+    },
+    {
+      "id": "6",
+      "name": "Rudy Mardiana"
+    },
+    {
+      "id": "7",
+      "name": "Cicih Sukarsih"
+    },
+    {
+      "id": "8",
+      "name": "Dina Ardianti"
+    },
+    {
+      "id": "9",
+      "name": "Muhammad Jayadi"
+    },
+    {
+      "id": "10",
+      "name": "Diding Hasannudin"
+    },
+    {
+      "id": "11",
+      "name": "Nurhidajati"
+    },
+    {
+      "id": "12",
+      "name": "Dede Muslimin"
+    },
+    {
+      "id": "13",
+      "name": "Dahrol Kutni"
+    },
+    {
+      "id": "14",
+      "name": "Endang Saefullah"
+    },
+    {
+      "id": "15",
+      "name": "Nunung Artono"
+    },
+    {
+      "id": "16",
+      "name": "Ipah Hapipah"
+    },
+    {
+      "id": "17",
+      "name": "Asmarani"
+    },
+    {
+      "id": "18",
+      "name": "Mega Jintan"
+    },
+    {
+      "id": "19",
+      "name": "Endang Wahyudin"
+    },
+    {
+      "id": "20",
+      "name": "Devi Fuzi Azhari"
+    },
+    {
+      "id": "21",
+      "name": "Netti Herawati"
+    },
+    {
+      "id": "22",
+      "name": "Suryo Yuni Lestari"
+    },
+    {
+      "id": "23",
+      "name": "Susi Setriorini"
+    },
+    {
+      "id": "24",
+      "name": "Hilman Iriana"
+    },
+    {
+      "id": "25",
+      "name": "Suwanta"
+    },
+    {
+      "id": "26",
+      "name": "Rian Ramdani"
+    },
+    {
+      "id": "27",
+      "name": "Sadtya Harry Purnama"
+    },
+    {
+      "id": "28",
+      "name": "Maulana Yusuf"
+    },
+    {
+      "id": "29",
+      "name": "Yusuf Samsudin"
+    },
+    {
+      "id": "30",
+      "name": "Galuh Permna"
+    },
+    {
+      "id": "31",
+      "name": "Nana"
+    },
+    {
+      "id": "32",
+      "name": "Edi Tito Suryano"
+    },
+    {
+      "id": "33",
+      "name": "Naftaleni Arifin"
+    },
+    {
+      "id": "34",
+      "name": "Diah Widjaja"
+    },
+    {
+      "id": "35",
+      "name": "Mulyati"
+    },
+    {
+      "id": "36",
+      "name": "Sopan Guniadi"
+    },
+    {
+      "id": "37",
+      "name": "Dedi Supriat Rahman"
+    },
+    {
+      "id": "38",
+      "name": "Suwarli"
+    },
+    {
+      "id": "39",
+      "name": "Evi Martini"
+    },
+    {
+      "id": "40",
+      "name": "Cecep Sofyan"
+    },
+    {
+      "id": "41",
+      "name": "Didah Nurhaida"
+    },
+    {
+      "id": "42",
+      "name": "Ida Noertjahya"
+    },
+    {
+      "id": "43",
+      "name": "Resty Rahmawaty"
+    },
+    {
+      "id": "44",
+      "name": "Ani Rahayu"
+    }
+  ],
+  "subjects": {
+    "wajib": [
+      {
+        "id": "1",
+        "name": "Pendidikan Agama dan Budi pekerti",
+        "credit": "3",
+        "teachers": [1, 2, 3]
+      },
+      {
+        "id": "2",
+        "name": "Pendidikan Pancasila dan Kewarganegaraan",
+        "credit": "2",
+        "teachers": [4, 5]
+      },
+      {
+        "id": "3",
+        "name": "Bahasa Indonesia",
+        "credit": "4",
+        "teachers": [6, 7, 8, 9]
+      },
+      {
+        "id": "4",
+        "name": "Matematika",
+        "credit": "4",
+        "teachers": [11, 12, 13]
+      },
+      {
+        "id": "5",
+        "name": "Sejarah Indonesia",
+        "credit": "2",
+        "teachers": [15, 16]
+      },
+      {
+        "id": "6",
+        "name": "Bahasa Inggris",
+        "credit": "2",
+        "teachers": [17, 18, 19]
+      },
+      {
+        "id": "7",
+        "name": "Seni Budaya",
+        "credit": "2",
+        "teachers": [21, 22, 23]
+      },
+      {
+        "id": "8",
+        "name": "Pendidikan Jasmani, Olahraga dan Kesehatan",
+        "credit": "3",
+        "teachers": [24, 25, 26]
+      },
+      {
+        "id": "9",
+        "name": "Prakarya dan Kewirausahaan",
+        "credit": "2",
+        "teachers": [27, 28]
+      },
+      {
+        "id": "10",
+        "name": "Bahasa Sunda",
+        "credit": "2",
+        "teachers": [29, 30]
+      }
+    ],
+    "ipa": [
+      {
+        "id": "11",
+        "name": "Matematika IPA",
+        "credit": "4",
+        "teachers": [14, 11]
+      },
+      {
+        "id": "12",
+        "name": "Biologi",
+        "credit": "4",
+        "teachers": [31, 32, 33]
+      },
+      {
+        "id": "13",
+        "name": "Fisika",
+        "credit": "4",
+        "teachers": [34, 35]
+      },
+      {
+        "id": "14",
+        "name": "Kimia",
+        "credit": "4",
+        "teachers": [37, 36]
+      }
+    ],
+    "ips": [
+      {
+        "id": "15",
+        "name": "Geografi",
+        "credit": "4",
+        "teachers": [38]
+      },
+      {
+        "id": "16",
+        "name": "Sejarah",
+        "credit": "4",
+        "teachers": [39]
+      },
+      {
+        "id": "17",
+        "name": "Sosiologi",
+        "credit": "4",
+        "teachers": [44]
+      },
+      {
+        "id": "18",
+        "name": "Ekonomi",
+        "credit": "4",
+        "teachers": [40, 41, 41]
+      }
+    ],
+    "bhs": [
+      {
+        "id": "19",
+        "name": "Bahasa dan Sastra Indonesia",
+        "credit": "4",
+        "teachers": [10]
+      },
+      {
+        "id": "20",
+        "name": "Bahasa dan Sastra Inggris",
+        "credit": "4",
+        "teachers": [20]
+      },
+      {
+        "id": "21",
+        "name": "Bahasa dan Sastra Jerman",
+        "credit": "4",
+        "teachers": [43]
+      },
+      {
+        "id": "22",
+        "name": "Antropologi",
+        "credit": "4",
+        "teachers": [44]
+      }
+    ]
+  }
+}
