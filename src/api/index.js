@@ -117,12 +117,9 @@ const initialize = (data, populations) => {
 
 const fitness_value = (population, teachers_length) => {
   var fitness_value = [];
-  console.log(population);
 
   population.forEach(individu => {
-    // chromosome.forEach((gene) => {
     fitness_value.push(fitness_evaluation(individu, teachers_length));
-    // });
   });
   return new Promise((resolve, reject) => {
     resolve(fitness_value);
@@ -132,26 +129,67 @@ const fitness_value = (population, teachers_length) => {
 const fitness_evaluation = (individu, teachers_length) => {
   // [a, j, k, day, start, end, subject, teacher]
   var penalty = 0;
-  console.log(individu);
-  for (let j = 0; j < individu.length; j++) {
-    var teacher = individu[j][7],
-      day = individu[j][3],
-      start = individu[j][4];
-    for (let i = 0; i < individu.length; i++) {
-      var teacher_2 = individu[i][7],
-        day_2 = individu[i][3],
-        start_2 = individu[i][4];
-      if (i == j) continue;
-      if (day == day_2 && teacher == teacher_2 && start == start_2) {
-        console.log(j, individu[j], i, individu[i]);
-        penalty++;
+  // exist = false;
+  // var bentrok = [],
+  //   notBentrok = [];
+  // for (let k = 0; k < individu.length; k++) {
+  //   if (individu[k][7] < individu.length && individu[k][7] > 0) {
+  //     exist = true;
+  //   }
+  //   for (let l = 0; l < individu.length; l++) {
+  //     if (l == k) continue;
+  //     if (
+  //       individu[l][7] == individu[k][7] &&
+  //       individu[l][3] == individu[k][3] &&
+  //       individu[l][4] == individu[k][4]
+  //     ) {
+  //       bentrok.push([k, individu[k], l, individu[l]]);
+  //       penalty += 0.1;
+  //     } else {
+  //       notBentrok.push([k, individu[k], l, individu[l]]);
+  //     }
+  //   }
+  // }
+  var jadwal_guru = [];
+  for (let i = 0; i < teachers_length; i++) {
+    var slot_guru = [],
+      exist = false;
+    individu.forEach(slot => {
+      if (slot[7] == i + 1) {
+        exist = true;
+        slot_guru.push(slot);
       }
-
-      // for (let j = 0; j < teachers_length; j++) {}
-    }
+    });
+    if (!exist) penalty++;
+    jadwal_guru.push(slot_guru);
   }
+  jadwal_guru.forEach(guru => {
+    guru.forEach((slot_guru, index) => {
+      var day = slot_guru[3],
+        start = slot_guru[4],
+        end = slot_guru[5],
+        guru = slot_guru[7],
+        credit = Number(end) - start;
+      // console.log(guru);
+      jadwal_guru.forEach(guru2 => {
+        guru2.forEach((slot_guru_2, index2) => {
+          var day_2 = slot_guru_2[3],
+            start_2 = slot_guru_2[4],
+            end_2 = slot_guru_2[5],
+            guru_2 = slot_guru_2[7],
+            credit_2 = Number(end) - start;
 
-  return 1 / (1 + penalty);
+          if (index == index2) return;
+          if (start == start_2 && day == day_2 && guru == guru_2) {
+            penalty += 0.1;
+          }
+        });
+      });
+    });
+  });
+  // console.log(Math.floor(penalty), notBentrok);
+  console.log(penalty);
+  return 1 / (1 + Math.floor(penalty));
 };
 
 /**

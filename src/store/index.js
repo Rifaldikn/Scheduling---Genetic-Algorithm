@@ -53,7 +53,7 @@ export default new Vuex.Store({
     },
     add_fitness_value({ dispatch, commit }, payload) {
       for (var i = 0; i < payload.length; i++) {
-        var msg = `Individu ${i+1} : ${payload[i].toFixed(6)}`;
+        var msg = `Individu ${i+1} : ${payload[i].toFixed(7)}`;
         dispatch("add_message", msg);
       }
       commit("ADD_FITNESS_VALUE", payload);
