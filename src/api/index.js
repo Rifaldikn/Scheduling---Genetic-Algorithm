@@ -29,7 +29,8 @@ const initialize = (data, populations) => {
           var start, end, subject, teacher, day;
           wajib.forEach(element => {
             if (element.credit > 3) {
-              for (let x = 0; x < element.credit; x++) {
+              for (let x = 0; x < 3; x++) {
+                // Devided assign slot into 2 session
                 day = randomize(0, 4);
                 if (day == 1) {
                   start = randomize(0, 6);
@@ -69,7 +70,7 @@ const initialize = (data, populations) => {
           }
           peminatan.forEach(element => {
             if (element.credit > 3) {
-              for (let x = 0; x < element.credit; x++) {
+              for (let x = 0; x < 3; x++) {
                 day = randomize(0, 4);
                 if (day == 1) {
                   start = randomize(0, 6);
@@ -109,7 +110,7 @@ const initialize = (data, populations) => {
  * Fitness
  * Setiap guru mengajar hanya pada satu kelas pada saat yang sama
  * Jam olahraga tidak boleh di atas slot waktu 3 pada hari senin, 5 pada hari selasa,rabu, kamis dan jumat
- * Setiap guru wajib mengajar minimal 24 sks dan maksimal 40 sks
+ * Setiap guru wajib mengajar minimal 24 sks dan maksimal 54 sks
  * Guru mengajar pada satu kelas maksimal 2 sks, kecuali bahasa
  * Setiap kelas wajib memenuhi sks setiap mapel yang telah ditentukan
  * Setiap kelas wajib memenuhi sks mapel wajib 24 sks dan peminatan 16 sks
@@ -128,29 +129,8 @@ const fitness_value = (population, teachers_length) => {
 
 const fitness_evaluation = (individu, teachers_length) => {
   // [a, j, k, day, start, end, subject, teacher]
-  var penalty = 0;
-  // exist = false;
-  // var bentrok = [],
-  //   notBentrok = [];
-  // for (let k = 0; k < individu.length; k++) {
-  //   if (individu[k][7] < individu.length && individu[k][7] > 0) {
-  //     exist = true;
-  //   }
-  //   for (let l = 0; l < individu.length; l++) {
-  //     if (l == k) continue;
-  //     if (
-  //       individu[l][7] == individu[k][7] &&
-  //       individu[l][3] == individu[k][3] &&
-  //       individu[l][4] == individu[k][4]
-  //     ) {
-  //       bentrok.push([k, individu[k], l, individu[l]]);
-  //       penalty += 0.1;
-  //     } else {
-  //       notBentrok.push([k, individu[k], l, individu[l]]);
-  //     }
-  //   }
-  // }
-  var jadwal_guru = [];
+  var penalty = 0,
+    jadwal_guru = [];
   for (let i = 0; i < teachers_length; i++) {
     var slot_guru = [],
       exist = false;
@@ -163,34 +143,112 @@ const fitness_evaluation = (individu, teachers_length) => {
     if (!exist) penalty++;
     jadwal_guru.push(slot_guru);
   }
-  jadwal_guru.forEach(guru => {
-    guru.forEach((slot_guru, index) => {
+  var test = [];
+  jadwal_guru.forEach((daftar_guru, index_daftar_guru) => {
+    var totalCredit = 0;
+    // console.log(daftar_guru);
+    daftar_guru.forEach((slot_guru, index) => {
       var day = slot_guru[3],
         start = slot_guru[4],
         end = slot_guru[5],
+        subject = slot_guru[6],
         guru = slot_guru[7],
         credit = Number(end) - start;
-      // console.log(guru);
+      totalCredit += credit;
+
+      if (subject == 8 && start > 4) {
+        penalty += 0.2;
+      }
+
       jadwal_guru.forEach(guru2 => {
         guru2.forEach((slot_guru_2, index2) => {
           var day_2 = slot_guru_2[3],
             start_2 = slot_guru_2[4],
-            end_2 = slot_guru_2[5],
-            guru_2 = slot_guru_2[7],
-            credit_2 = Number(end) - start;
+            guru_2 = slot_guru_2[7];
 
           if (index == index2) return;
           if (start == start_2 && day == day_2 && guru == guru_2) {
-            penalty += 0.1;
+            penalty += 0.2;
+          }
+          test.push([credit, start, start_2]);
+          for (let sks = 2; sks < 4; sks++) {
+            if (credit >= sks) {
+              if (
+                start + (sks - 1) == start_2 &&
+                day == day_2 &&
+                guru == guru2
+              ) {
+                penalty += 0.2;
+              }
+            }
           }
         });
       });
     });
+
+    if ((totalCredit * 45) / 60 > 54 && (totalCredit * 45) / 60 < 24) {
+      penalty += 1;
+    }
   });
   // console.log(Math.floor(penalty), notBentrok);
-  console.log(penalty);
-  return 1 / (1 + Math.floor(penalty));
+  // console.log(penalty)
+  return 1 / (1 + penalty);
 };
+
+function selection(fitness_arr) {
+  var sum = sum_fitness(fitness_arr);
+  var a = individu_probability(sum, fitness_arr);
+  var b = cumulative_probability(a);
+  var c = roulette(b, fitness_arr);
+  return new Promise((resolve, reject) => {
+    resolve(c);
+  });
+}
+
+function individu_probability(sum_fitness, fitness_arr) {
+  var temp = [];
+  fitness_arr.forEach(fitness_value => {
+    temp.push(fitness_value / sum_fitness);
+  });
+  return temp;
+}
+
+function sum_fitness(fitness_arr) {
+  var temp = 0;
+  fitness_arr.forEach(element => {
+    temp += element;
+  });
+  return temp;
+}
+
+function cumulative_probability(individu_probability) {
+  var temp = [],
+    x = 0;
+  for (let i = 0; i < individu_probability.length; i++) {
+    x += individu_probability[i];
+    temp.push(x);
+  }
+  return temp;
+}
+
+function roulette(cumulative_probability, fitness_arr) {
+  var temp = [];
+  while (temp.length < fitness_arr.length) {
+    var rand = Math.random() * (fitness_arr.length - 0) + 0;
+    cumulative_probability.forEach((element, index) => {
+      if (rand < cumulative_probability[0] && index == 0) {
+        temp.push([rand, element, index]);
+      } else if (cumulative_probability[index - 1] < rand && rand < element) {
+        temp.push([rand, element, index]);
+      }
+    });
+  }
+  return temp;
+}
+
+// function crossover(crossover_rate, parent, selected){
+
+// }
 
 /**
  * Fungsi mengambil daftar guru pada suatu mapel
@@ -217,5 +275,6 @@ function randomize(min, max) {
 export default {
   initialize,
   fitness_evaluation,
-  fitness_value
+  fitness_value,
+  selection
 };

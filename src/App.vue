@@ -32,12 +32,7 @@
           <v-flex xs12>
             <h3>Algorithm Process :</h3>
             <v-progress-linear :indeterminate="isloading" color="#9575CD"></v-progress-linear>
-            <v-container
-              xs12
-              fluid
-              style="height: 300px"
-              class="grey darken-4 scroll-y"
-            >
+            <v-container xs12 fluid style="height: 300px" class="grey darken-4 scroll-y">
               <div class="consoleLine">
                 <v-layout column>
                   <v-flex class="grey--text">
@@ -83,7 +78,7 @@ export default {
     timeTable
   },
   computed: {
-    ...mapGetters(["generations", "consoleMessage", "data"])
+    ...mapGetters(["generations", "consoleMessage", "data", "fitness_values"])
   },
   methods: {
     startProcess() {
@@ -96,15 +91,10 @@ export default {
     async startScheduling() {
       await api.initialize(this.data, this.pops).then(chromosome => {
         this.$store.dispatch("add_message", "Tahap Inisialisasi Populasi Awal");
-        // .then(() => {
-        // console.log("Ini chromosome", chromosome);
         this.$store.dispatch("add_generation", chromosome);
-        // });
       });
 
       for (var gen = 0; gen < this.max_gen; gen++) {
-        // console.log("Ini Generasi", this.generations);
-        // console.log(this.data.teachers.length);
         await api
           .fitness_value(this.generations[gen], this.data.teachers.length)
           .then(fitness_value => {
@@ -114,6 +104,11 @@ export default {
             );
             this.$store.dispatch("add_fitness_value", fitness_value);
           });
+
+        // console.log(this.fitness_value[gen]);
+        await api.selection(this.fitness_values[gen]).then(selected => {
+          console.log(selected);
+        });
       }
       this.isloading = false;
     },
