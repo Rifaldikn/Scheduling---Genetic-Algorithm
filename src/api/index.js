@@ -13,98 +13,103 @@
  * @param {Berisikan data guru, kelas, dll} data
  * @param {Banyak populasi awal yang dihasilkan} populations
  */
-const initialize = (data, populations) => {
-  var chromosome = [],
+ function initialize (data, populations) {
+   var chromosome = [],
     daftar_kelas = data.classes,
     wajib = data.subjects.wajib,
     ipa = data.subjects.ipa,
     ips = data.subjects.ips,
-    bhs = data.subjects.bhs;
+    bhs = data.subjects.bhs
   // var count = 0
-  for (let i = 0; i < populations; i++) {
-    var slot = [];
+   for (let i = 0; i < populations; i++) {
+    var slot = []
     daftar_kelas.forEach((angkatan, a) => {
       angkatan.forEach((jurusan, j) => {
         for (var k = 0; k < jurusan; k++) {
-          var start, end, subject, teacher, day;
+          var start, end, subject, teacher, day
           wajib.forEach(element => {
             if (element.credit > 3) {
               for (let x = 0; x < 3; x++) {
                 // Devided assign slot into 2 session
-                day = randomize(0, 4);
+                day = randomize(0, 4)
                 if (day == 1) {
-                  start = randomize(0, 6);
+                  start = randomize(0, 6)
                 } else {
-                  start = randomize(0, 7);
+                  start = randomize(0, 7)
                 } // karena ada 12 slot waktu
-                end = start + Number(element.credit) - 2;
-                subject = Number(element.id);
+                end = start + Number(element.credit) - 2
+                subject = Number(element.id)
                 teacher =
-                  element.teachers[randomize(0, element.teachers.length)];
-                slot.push([a, j, k, day, start, end, subject, teacher]);
+                  element.teachers[randomize(0, element.teachers.length)]
+                slot.push([a, j, k, day, start, end, subject, teacher])
               }
             } else {
-              day = randomize(0, 4);
+              day = randomize(0, 4)
               if (day == 1) {
-                start = randomize(0, 6);
+                start = randomize(0, 6)
               } else {
-                start = randomize(0, 7);
+                start = randomize(0, 7)
               } // karena ada 12 slot waktu
-              end = start + Number(element.credit);
-              subject = Number(element.id);
-              teacher = element.teachers[randomize(0, element.teachers.length)];
-              slot.push([a, j, k, day, start, end, subject, teacher]);
+              end = start + Number(element.credit)
+              subject = Number(element.id)
+              teacher = element.teachers[randomize(0, element.teachers.length)]
+              slot.push([a, j, k, day, start, end, subject, teacher])
             }
-          });
-          var peminatan;
+          })
+          var peminatan
           switch (j) {
             case 0:
-              peminatan = ipa;
-              break;
+              peminatan = ipa
+              break
             case 1:
-              peminatan = ips;
-              break;
+              peminatan = ips
+              break
             case 2:
-              peminatan = bhs;
-              break;
+              peminatan = bhs
+              break
           }
           peminatan.forEach(element => {
             if (element.credit > 3) {
               for (let x = 0; x < 3; x++) {
-                day = randomize(0, 4);
+                day = randomize(0, 4)
                 if (day == 1) {
-                  start = randomize(0, 6);
+                  start = randomize(0, 6)
                 } else {
-                  start = randomize(0, 7);
+                  start = randomize(0, 7)
                 } // karena ada 12 slot waktu
-                end = start + Number(element.credit) - 2;
-                subject = Number(element.id);
+                end = start + Number(element.credit) - 2
+                subject = Number(element.id)
                 teacher =
-                  element.teachers[randomize(0, element.teachers.length)];
-                slot.push([a, j, k, day, start, end, subject, teacher]);
+                  element.teachers[randomize(0, element.teachers.length)]
+                slot.push([a, j, k, day, start, end, subject, teacher])
               }
             } else {
-              day = randomize(0, 4);
+              day = randomize(0, 4)
               if (day == 1) {
-                start = randomize(0, 6);
+                start = randomize(0, 6)
               } else {
-                start = randomize(0, 7);
+                start = randomize(0, 7)
               } // karena ada 12 slot waktu
-              end = start + Number(element.credit);
-              subject = Number(element.id);
-              teacher = element.teachers[randomize(0, element.teachers.length)];
-              slot.push([a, j, k, day, start, end, subject, teacher]);
+              end = start + Number(element.credit)
+              subject = Number(element.id)
+              teacher = element.teachers[randomize(0, element.teachers.length)]
+              slot.push([a, j, k, day, start, end, subject, teacher])
             }
-          });
+          })
         }
-      });
-    });
-    chromosome.push(slot);
+      })
+    })
+    chromosome.push(slot)
   }
-  return new Promise((resolve, reject) => {
-    resolve(chromosome);
-  });
-};
+   return new Promise((resolve, reject) => {
+    if (!chromosome) {
+      reject(new Error('Error!'))
+    } else {
+      resolve(chromosome)
+    }
+  })
+  // return chromosome
+ }
 
 /**
  * Fitness
@@ -116,36 +121,36 @@ const initialize = (data, populations) => {
  * Setiap kelas wajib memenuhi sks mapel wajib 24 sks dan peminatan 16 sks
  */
 
-const fitness_value = (population, teachers_length) => {
-  var fitness_value = [];
+ function fitness_value (population, teachers_length) {
+  var fitness_value = []
 
   population.forEach(individu => {
-    fitness_value.push(fitness_evaluation(individu, teachers_length));
-  });
+    fitness_value.push(fitness_evaluation(individu, teachers_length))
+  })
   return new Promise((resolve, reject) => {
-    resolve(fitness_value);
-  });
-};
+    resolve(fitness_value)
+  })
+}
 
-const fitness_evaluation = (individu, teachers_length) => {
+ const fitness_evaluation = (individu, teachers_length) => {
   // [a, j, k, day, start, end, subject, teacher]
   var penalty = 0,
-    jadwal_guru = [];
+    jadwal_guru = []
   for (let i = 0; i < teachers_length; i++) {
     var slot_guru = [],
-      exist = false;
+      exist = false
     individu.forEach(slot => {
       if (slot[7] == i + 1) {
-        exist = true;
-        slot_guru.push(slot);
+        exist = true
+        slot_guru.push(slot)
       }
-    });
-    if (!exist) penalty++;
-    jadwal_guru.push(slot_guru);
+    })
+    if (!exist) penalty++
+    jadwal_guru.push(slot_guru)
   }
-  var test = [];
+  var test = []
   jadwal_guru.forEach((daftar_guru, index_daftar_guru) => {
-    var totalCredit = 0;
+    var totalCredit = 0
     // console.log(daftar_guru);
     daftar_guru.forEach((slot_guru, index) => {
       var day = slot_guru[3],
@@ -153,24 +158,24 @@ const fitness_evaluation = (individu, teachers_length) => {
         end = slot_guru[5],
         subject = slot_guru[6],
         guru = slot_guru[7],
-        credit = Number(end) - start;
-      totalCredit += credit;
+        credit = Number(end) - start
+      totalCredit += credit
 
       if (subject == 8 && start > 4) {
-        penalty += 0.2;
+        penalty += 0.2
       }
 
       jadwal_guru.forEach(guru2 => {
         guru2.forEach((slot_guru_2, index2) => {
           var day_2 = slot_guru_2[3],
             start_2 = slot_guru_2[4],
-            guru_2 = slot_guru_2[7];
+            guru_2 = slot_guru_2[7]
 
-          if (index == index2) return;
+          if (index == index2) return
           if (start == start_2 && day == day_2 && guru == guru_2) {
-            penalty += 0.2;
+            penalty += 0.2
           }
-          test.push([credit, start, start_2]);
+          test.push([credit, start, start_2])
           for (let sks = 2; sks < 4; sks++) {
             if (credit >= sks) {
               if (
@@ -178,77 +183,126 @@ const fitness_evaluation = (individu, teachers_length) => {
                 day == day_2 &&
                 guru == guru2
               ) {
-                penalty += 0.2;
+                penalty += 0.2
               }
             }
           }
-        });
-      });
-    });
+        })
+      })
+    })
 
     if ((totalCredit * 45) / 60 > 54 && (totalCredit * 45) / 60 < 24) {
-      penalty += 1;
+      penalty += 1
     }
-  });
+  })
   // console.log(Math.floor(penalty), notBentrok);
   // console.log(penalty)
-  return 1 / (1 + penalty);
-};
+  return 1 / (1 + penalty)
+}
 
-function selection(fitness_arr) {
-  var sum = sum_fitness(fitness_arr);
-  var a = individu_probability(sum, fitness_arr);
-  var b = cumulative_probability(a);
-  var c = roulette(b, fitness_arr);
+function selection (fitness_arr) {
+  var sum = sum_fitness(fitness_arr)
+  var a = individu_probability(sum, fitness_arr)
+  var b = cumulative_probability(a)
+  var c = roulette(b, fitness_arr)
   return new Promise((resolve, reject) => {
-    resolve(c);
-  });
+    resolve(c)
+  })
 }
 
-function individu_probability(sum_fitness, fitness_arr) {
-  var temp = [];
+ function individu_probability (sum_fitness, fitness_arr) {
+  var temp = []
   fitness_arr.forEach(fitness_value => {
-    temp.push(fitness_value / sum_fitness);
-  });
-  return temp;
+    temp.push(fitness_value / sum_fitness)
+  })
+  return temp
 }
 
-function sum_fitness(fitness_arr) {
-  var temp = 0;
+ function sum_fitness (fitness_arr) {
+  var temp = 0
   fitness_arr.forEach(element => {
-    temp += element;
-  });
-  return temp;
+    temp += element
+  })
+  return temp
 }
 
-function cumulative_probability(individu_probability) {
+ function cumulative_probability (individu_probability) {
   var temp = [],
-    x = 0;
+    x = 0
   for (let i = 0; i < individu_probability.length; i++) {
-    x += individu_probability[i];
-    temp.push(x);
+    x += individu_probability[i]
+    temp.push(x)
   }
-  return temp;
+  return temp
 }
 
-function roulette(cumulative_probability, fitness_arr) {
-  var temp = [];
+ function roulette (cumulative_probability, fitness_arr) {
+  var temp = []
   while (temp.length < fitness_arr.length) {
-    var rand = Math.random() * (fitness_arr.length - 0) + 0;
+    var rand = Math.random() * (fitness_arr.length - 0) + 0
     cumulative_probability.forEach((element, index) => {
       if (rand < cumulative_probability[0] && index == 0) {
-        temp.push([rand, element, index]);
+        temp.push(index)
       } else if (cumulative_probability[index - 1] < rand && rand < element) {
-        temp.push([rand, element, index]);
+        temp.push(index)
       }
-    });
+    })
   }
-  return temp;
+  return temp
 }
 
-// function crossover(crossover_rate, parent, selected){
+ function crossover (cr, individu, selected) {
+  var parent_selected,
+    offspring = [], // array baru berupa offspring [array_individu,...]
+    new_parent = [], // index hanya individu yang terpilih lewat probabilitas crossover
+    selected_individu = [], // index [index_individu,...] untuk generasi baru
+    cut_point = (individu.length * cr) / 100,
+    r_acak = [] // menyimpan bilangan acak sesuai seleceted[index]
 
-// }
+  // parent_selection(r_acak, cut_point,selected,new_parent).then(() => {
+  //   crossing_process(new_parent, individu)
+  // });
+  while (r_acak.length < selected.length) {
+    r_acak.push(Math.random() * (1 - 0) + 0)
+  }
+
+  while (new_parent.length < Math.floor(cut_point)) {
+    r_acak.forEach((element, index) => {
+      if (element < cr / 100 && new_parent.length < Math.floor(cut_point)) {
+        new_parent.push(selected[index])
+      } else {
+        offspring.push(individu[selected[index]]) // mengassign array dari selected individu yang tidak terpilih sebagai parent
+      }
+    })
+  }
+
+  // while (offspring.length < selected.length) {
+  // console.log(individu)
+  new_parent.forEach((element, index) => {
+    var parent_1 = individu[element],
+      parent_2 = individu[new_parent[(index + 1) % new_parent.length]]
+    const rand = randomize(1, parent_1.length)
+    // parent_1.splice(rand, parent_1.length - rand)
+    parent_2.splice(0, parent_1.length / 2)
+    console.log([
+      element,
+      index,
+      parent_1,
+      (index + 1) % new_parent.length,
+      parent_2,
+      rand
+    ])
+  })
+  // }
+  // console.log(offspring)
+  // return new Promise((resolve, reject) => {
+  //   resolve(new_parent)
+  // })
+}
+
+ function parent_selection (r_acak, cut_point, selected, new_parent) {}
+
+ function crossing_process (new_parent, individu) {}
 
 /**
  * Fungsi mengambil daftar guru pada suatu mapel
@@ -256,8 +310,8 @@ function roulette(cumulative_probability, fitness_arr) {
  * Fungsi akan mengembalikan nilai berupa array list guru
  * @param {Referensi id subject} subjectCode
  */
-function getTeachersBySubjectCode(subjectCode) {
-  return data.teachers.filter(teacher => teacher.subject == subjectCode);
+ function getTeachersBySubjectCode (subjectCode) {
+  return data.teachers.filter(teacher => teacher.subject == subjectCode)
 }
 
 /**
@@ -265,16 +319,13 @@ function getTeachersBySubjectCode(subjectCode) {
  * @param {batas angka minimal} min
  * @param {batas angka maksimal} max
  */
-function randomize(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+ function randomize (min, max) {
+  return Math.floor(Math.random() * (max - min) + min)
 }
 
-/**
- * Mengexport fungsi yang ada agar dapat dipakai pada App.vue
- */
-export default {
+ export default {
   initialize,
-  fitness_evaluation,
   fitness_value,
-  selection
-};
+  selection,
+  crossover
+}

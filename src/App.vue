@@ -20,10 +20,10 @@
             <v-flex xs1 ml-5>
               <v-text-field label="Maximum Generation" v-model="max_gen"></v-text-field>
             </v-flex>
-            <v-btn @click="startProcess" round dark large color="#9575CD">Start Scheduling
+            <v-btn @click="start_scheduling" round dark large color="#9575CD">Start Scheduling
               <v-icon>slideshow</v-icon>
             </v-btn>
-            <v-btn @click="reset" round dark large color="red lighten-1">Reset
+            <v-btn round dark large color="red lighten-1">Reset
               <v-icon>cancel</v-icon>
             </v-btn>
           </v-layout>
@@ -59,8 +59,8 @@
 </template>
 
 <script>
+import json from "./data/data.json";
 import api from "./api";
-import { mapGetters } from "vuex";
 import timeTable from "./components/timeTable.vue";
 
 export default {
@@ -68,52 +68,66 @@ export default {
   data: () => {
     return {
       pops: 0,
-      cr: 0,
+      cr: 85,
       mr: 0,
       max_gen: 1,
-      isloading: false
+      isloading: false,
+      // dummy_data: json,
+      consoleMessage: [],
+      generations: [],
+      fitness_value: []
     };
   },
   components: {
     timeTable
   },
   computed: {
-    ...mapGetters(["generations", "consoleMessage", "data", "fitness_values"])
+    dummy_data: function() {
+      return json;
+    }
   },
   methods: {
-    startProcess() {
+    async start_scheduling() {
       this.isloading = true;
+      // console.log(this.dummy_data);
       var that = this;
-      setTimeout(function() {
-        that.startScheduling();
-      }, 500);
-    },
-    async startScheduling() {
-      await api.initialize(this.data, this.pops).then(chromosome => {
-        this.$store.dispatch("add_message", "Tahap Inisialisasi Populasi Awal");
-        this.$store.dispatch("add_generation", chromosome);
+      await api.initialize(this.dummy_data, this.pops).then(chromosome => {
+        this.generations.push(chromosome);
+        this.add_message(chromosome);
+        // this.$nextTick(function() {
+        //   // console.log(this.generations); // => 'updated'
+        // });
       });
-
-      for (var gen = 0; gen < this.max_gen; gen++) {
+      // console.log(this.generations);
+      for (let gen = 0; gen < this.max_gen; gen++) {
         await api
-          .fitness_value(this.generations[gen], this.data.teachers.length)
+          .fitness_value(this.generations[gen], this.dummy_data.teachers.length)
           .then(fitness_value => {
-            this.$store.dispatch(
-              "add_message",
-              "Nilai Fitness Generasi Ke - " + (gen + 1)
-            );
-            this.$store.dispatch("add_fitness_value", fitness_value);
+            this.add_message("Nilai Fitness Generasi Ke - " + (gen + 1));
+            this.add_message(fitness_value);
+
+            this.fitness_value.push(fitness_value);
           });
 
-        // console.log(this.fitness_value[gen]);
-        await api.selection(this.fitness_values[gen]).then(selected => {
-          console.log(selected);
+        await api.selection(this.fitness_value[gen]).then(selected => {
+          var individu = this.generations[gen];
+          api.crossover(this.cr, individu, selected);
         });
       }
       this.isloading = false;
     },
-    reset() {
-      this.$store.dispatch("reset_data");
+    add_message(msg) {
+      var arr = [];
+      if (msg[0].length > 30) {
+        msg.forEach(element => {
+          arr = element.slice(0, 30);
+          arr.push(`...and ${element.length - 30} more`);
+          this.consoleMessage.push(arr);
+        });
+      } else {
+        arr = msg;
+        this.consoleMessage.push(arr);
+      }
     }
   }
 };
