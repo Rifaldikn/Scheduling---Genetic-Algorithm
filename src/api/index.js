@@ -13,17 +13,17 @@
  * @param {Berisikan data guru, kelas, dll} data
  * @param {Banyak populasi awal yang dihasilkan} populations
  */
- function initialize (data, populations) {
-   var chromosome = [],
+async function initialize (data, populations) {
+  var chromosome = [],
     daftar_kelas = data.classes,
     wajib = data.subjects.wajib,
     ipa = data.subjects.ipa,
     ips = data.subjects.ips,
     bhs = data.subjects.bhs
   // var count = 0
-   for (let i = 0; i < populations; i++) {
+  for (let i = 0; i < populations; i++) {
     var slot = []
-    daftar_kelas.forEach((angkatan, a) => {
+    await daftar_kelas.forEach((angkatan, a) => {
       angkatan.forEach((jurusan, j) => {
         for (var k = 0; k < jurusan; k++) {
           var start, end, subject, teacher, day
@@ -60,13 +60,13 @@
           switch (j) {
             case 0:
               peminatan = ipa
-              break
+              break;
             case 1:
               peminatan = ips
-              break
+              break;
             case 2:
               peminatan = bhs
-              break
+              break;
           }
           peminatan.forEach(element => {
             if (element.credit > 3) {
@@ -101,7 +101,8 @@
     })
     chromosome.push(slot)
   }
-   return new Promise((resolve, reject) => {
+  // await console.log(chromosome)
+  return new Promise((resolve, reject) => {
     if (!chromosome) {
       reject(new Error('Error!'))
     } else {
@@ -109,7 +110,7 @@
     }
   })
   // return chromosome
- }
+}
 
 /**
  * Fitness
@@ -121,10 +122,10 @@
  * Setiap kelas wajib memenuhi sks mapel wajib 24 sks dan peminatan 16 sks
  */
 
- function fitness_value (population, teachers_length) {
+async function fitness_value (population, teachers_length) {
   var fitness_value = []
 
-  population.forEach(individu => {
+  await population.forEach(individu => {
     fitness_value.push(fitness_evaluation(individu, teachers_length))
   })
   return new Promise((resolve, reject) => {
@@ -132,8 +133,9 @@
   })
 }
 
- const fitness_evaluation = (individu, teachers_length) => {
+function fitness_evaluation (individu, teachers_length) {
   // [a, j, k, day, start, end, subject, teacher]
+  // console.log(individu, teachers_length);
   var penalty = 0,
     jadwal_guru = []
   for (let i = 0; i < teachers_length; i++) {
@@ -146,8 +148,10 @@
       }
     })
     if (!exist) penalty++
+
     jadwal_guru.push(slot_guru)
   }
+
   var test = []
   jadwal_guru.forEach((daftar_guru, index_daftar_guru) => {
     var totalCredit = 0
@@ -210,7 +214,7 @@ function selection (fitness_arr) {
   })
 }
 
- function individu_probability (sum_fitness, fitness_arr) {
+function individu_probability (sum_fitness, fitness_arr) {
   var temp = []
   fitness_arr.forEach(fitness_value => {
     temp.push(fitness_value / sum_fitness)
@@ -218,7 +222,7 @@ function selection (fitness_arr) {
   return temp
 }
 
- function sum_fitness (fitness_arr) {
+function sum_fitness (fitness_arr) {
   var temp = 0
   fitness_arr.forEach(element => {
     temp += element
@@ -226,7 +230,7 @@ function selection (fitness_arr) {
   return temp
 }
 
- function cumulative_probability (individu_probability) {
+function cumulative_probability (individu_probability) {
   var temp = [],
     x = 0
   for (let i = 0; i < individu_probability.length; i++) {
@@ -236,7 +240,7 @@ function selection (fitness_arr) {
   return temp
 }
 
- function roulette (cumulative_probability, fitness_arr) {
+function roulette (cumulative_probability, fitness_arr) {
   var temp = []
   while (temp.length < fitness_arr.length) {
     var rand = Math.random() * (fitness_arr.length - 0) + 0
@@ -251,58 +255,50 @@ function selection (fitness_arr) {
   return temp
 }
 
- function crossover (cr, individu, selected) {
-  var parent_selected,
-    offspring = [], // array baru berupa offspring [array_individu,...]
+function crossover (cr, individu, selected) {
+  var offspring = [], // array baru berupa offspring [array_individu,...]
     new_parent = [], // index hanya individu yang terpilih lewat probabilitas crossover
     selected_individu = [], // index [index_individu,...] untuk generasi baru
-    cut_point = (individu.length * cr) / 100,
+    cut_point = Math.floor(individu.length * (cr / 100)),
     r_acak = [] // menyimpan bilangan acak sesuai seleceted[index]
 
-  // parent_selection(r_acak, cut_point,selected,new_parent).then(() => {
-  //   crossing_process(new_parent, individu)
+  // parent_selection(r_acak, cut_point, selected, new_parent).then(() => {
+  //   crossing_process(new_parent, individu);
   // });
   while (r_acak.length < selected.length) {
     r_acak.push(Math.random() * (1 - 0) + 0)
   }
 
-  while (new_parent.length < Math.floor(cut_point)) {
-    r_acak.forEach((element, index) => {
-      if (element < cr / 100 && new_parent.length < Math.floor(cut_point)) {
-        new_parent.push(selected[index])
+  while (new_parent.length < cut_point) {
+    r_acak.forEach((acak, index) => {
+      console.log(acak.toFixed(4))
+      if (acak < cr / 100) {
+        new_parent.push(individu[index])
       } else {
-        offspring.push(individu[selected[index]]) // mengassign array dari selected individu yang tidak terpilih sebagai parent
+        offspring.push(individu[index])
       }
     })
   }
 
   // while (offspring.length < selected.length) {
-  // console.log(individu)
-  new_parent.forEach((element, index) => {
-    var parent_1 = individu[element],
-      parent_2 = individu[new_parent[(index + 1) % new_parent.length]]
-    const rand = randomize(1, parent_1.length)
-    // parent_1.splice(rand, parent_1.length - rand)
-    parent_2.splice(0, parent_1.length / 2)
-    console.log([
-      element,
-      index,
-      parent_1,
-      (index + 1) % new_parent.length,
-      parent_2,
-      rand
-    ])
-  })
+  console.log([
+    Math.floor(cut_point),
+    selected.length,
+    r_acak,
+    new_parent,
+    offspring,
+    individu
+  ])
   // }
-  // console.log(offspring)
-  // return new Promise((resolve, reject) => {
-  //   resolve(new_parent)
-  // })
+
+  return new Promise((resolve, reject) => {
+    resolve(offspring)
+  })
 }
 
- function parent_selection (r_acak, cut_point, selected, new_parent) {}
+function parent_selection (r_acak, cut_point, selected, new_parent) {}
 
- function crossing_process (new_parent, individu) {}
+function crossing_process (new_parent, individu) {}
 
 /**
  * Fungsi mengambil daftar guru pada suatu mapel
@@ -310,7 +306,7 @@ function selection (fitness_arr) {
  * Fungsi akan mengembalikan nilai berupa array list guru
  * @param {Referensi id subject} subjectCode
  */
- function getTeachersBySubjectCode (subjectCode) {
+function getTeachersBySubjectCode (subjectCode) {
   return data.teachers.filter(teacher => teacher.subject == subjectCode)
 }
 
@@ -319,11 +315,11 @@ function selection (fitness_arr) {
  * @param {batas angka minimal} min
  * @param {batas angka maksimal} max
  */
- function randomize (min, max) {
+function randomize (min, max) {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
- export default {
+export default {
   initialize,
   fitness_value,
   selection,

@@ -72,10 +72,9 @@ export default {
       mr: 0,
       max_gen: 1,
       isloading: false,
-      // dummy_data: json,
-      consoleMessage: [],
-      generations: [],
-      fitness_value: []
+      consoleMessage: new Array(),
+      generations: new Array(),
+      fitness_value: new Array()
     };
   },
   components: {
@@ -92,14 +91,14 @@ export default {
       // console.log(this.dummy_data);
       var that = this;
       await api.initialize(this.dummy_data, this.pops).then(chromosome => {
+        // console.log("Inside Initialize Function", chromosome)
         this.generations.push(chromosome);
         this.add_message(chromosome);
-        // this.$nextTick(function() {
-        //   // console.log(this.generations); // => 'updated'
-        // });
       });
-      // console.log(this.generations);
+      // console.log("generasi", this.generations);
       for (let gen = 0; gen < this.max_gen; gen++) {
+        //   var individu = this.generations[gen];
+        // console.log(this.generations[gen]);
         await api
           .fitness_value(this.generations[gen], this.dummy_data.teachers.length)
           .then(fitness_value => {
@@ -107,12 +106,19 @@ export default {
             this.add_message(fitness_value);
 
             this.fitness_value.push(fitness_value);
+            // console.log("generasi", this.generations);
           });
-
+        var selected_parent = [];
         await api.selection(this.fitness_value[gen]).then(selected => {
-          var individu = this.generations[gen];
-          api.crossover(this.cr, individu, selected);
+          selected_parent = selected;
         });
+
+        await api
+          .crossover(this.cr, this.generations[gen], selected_parent)
+          .then(new_generation => {
+            // console.log([this.generations[gen], new_generation]);
+          });
+        // });
       }
       this.isloading = false;
     },
