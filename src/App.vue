@@ -87,18 +87,19 @@ export default {
   },
   methods: {
     async start_scheduling() {
+      var t0 = performance.now();
+
       this.isloading = true;
+
       // console.log(this.dummy_data);
       var that = this;
       await api.initialize(this.dummy_data, this.pops).then(chromosome => {
-        // console.log("Inside Initialize Function", chromosome)
         this.generations.push(chromosome);
         this.add_message(chromosome);
       });
-      // console.log("generasi", this.generations);
+
       for (let gen = 0; gen < this.max_gen; gen++) {
-        //   var individu = this.generations[gen];
-        // console.log(this.generations[gen]);
+        var found = false
         await api
           .fitness_value(this.generations[gen], this.dummy_data.teachers.length)
           .then(fitness_value => {
@@ -106,21 +107,36 @@ export default {
             this.add_message(fitness_value);
 
             this.fitness_value.push(fitness_value);
-            // console.log("generasi", this.generations);
           });
+
         var selected_parent = [];
         await api.selection(this.fitness_value[gen]).then(selected => {
           selected_parent = selected;
+          this.add_message("Individu Terpilih Generasi Ke - " + (gen + 1));
+          this.add_message(selected);
         });
 
         await api
           .crossover(this.cr, this.generations[gen], selected_parent)
-          .then(new_generation => {
-            // console.log([this.generations[gen], new_generation]);
+          .then(async crossover_individu => {
+            this.add_message("Hasil Crossover Generasi Ke - " + (gen + 1));
+            this.add_message(crossover_individu);
+            await api
+              .mutation(crossover_individu, this.dummy_data, this.mr)
+              // .then(async (mutation_individu, fitness)=> {
+              //   // await api.fitness_value().then(async (mutation_individu, fitness_mutation) => {
+              //   //   array.forEach(element => {
+                    
+              //   //   });
+              //   // });
+              // });
           });
-        // });
       }
       this.isloading = false;
+      var t1 = performance.now();
+      console.log(
+        "Scheduling Process took " + ((t1 - t0) / 1000).toFixed(4) + " seconds."
+      );
     },
     add_message(msg) {
       var arr = [];
