@@ -69,7 +69,7 @@ export default {
     return {
       pops: 0,
       cr: 85,
-      mr: 0,
+      mr: 0.5,
       max_gen: 1,
       isloading: false,
       consoleMessage: new Array(),
@@ -98,39 +98,70 @@ export default {
         this.add_message(chromosome);
       });
 
-      for (let gen = 0; gen < this.max_gen; gen++) {
-        var found = false
-        await api
-          .fitness_value(this.generations[gen], this.dummy_data.teachers.length)
-          .then(fitness_value => {
-            this.add_message("Nilai Fitness Generasi Ke - " + (gen + 1));
-            this.add_message(fitness_value);
+      await api
+        .fitness_value(this.generations[0], this.dummy_data.teachers.length)
+        .then(fitness_value => {
+          this.add_message("Nilai Fitness Generasi Ke - " + 1);
+          this.add_message(fitness_value);
 
-            this.fitness_value.push(fitness_value);
-          });
-
-        var selected_parent = [];
-        await api.selection(this.fitness_value[gen]).then(selected => {
-          selected_parent = selected;
-          this.add_message("Individu Terpilih Generasi Ke - " + (gen + 1));
-          this.add_message(selected);
+          this.fitness_value.push(fitness_value);
         });
 
-        await api
-          .crossover(this.cr, this.generations[gen], selected_parent)
-          .then(async crossover_individu => {
-            this.add_message("Hasil Crossover Generasi Ke - " + (gen + 1));
-            this.add_message(crossover_individu);
-            await api
-              .mutation(crossover_individu, this.dummy_data, this.mr)
-              // .then(async (mutation_individu, fitness)=> {
-              //   // await api.fitness_value().then(async (mutation_individu, fitness_mutation) => {
-              //   //   array.forEach(element => {
-                    
-              //   //   });
-              //   // });
-              // });
+      for (let gen = 0; gen < this.max_gen; gen++) {
+        var found = false;
+        if (!found) {
+          var selected_parent = [];
+          await api.selection(this.fitness_value[gen]).then(selected => {
+            selected_parent = selected;
+            this.add_message("Individu Terpilih Generasi Ke - " + (gen + 1));
+            this.add_message(selected);
           });
+
+          await api
+            .crossover(this.cr, this.generations[gen], selected_parent)
+            .then(async crossover_individu => {
+              this.add_message("Hasil Crossover Generasi Ke - " + (gen + 1));
+              this.add_message(crossover_individu);
+              await api
+                .mutation(crossover_individu, this.dummy_data, this.mr)
+                .then(async mutated => {
+                  this.add_message("Hasil Mutasi Generasi Ke - " + (gen + 1));
+                  this.add_message(mutated.individu);
+                  this.generations.push(mutated.individu);
+
+                  this.add_message(
+                    "Nilai Fitness Mutasi Generasi Ke - " + (gen + 1)
+                  );
+                  this.add_message(mutated.fitness);
+                  this.fitness_value.push(mutated.fitness);
+
+                  this.add_message(
+                    "Nilai Fitness Terbaik adalah " +
+                      Math.max(...mutated.fitness)
+                  );
+
+                  if (Math.max(...mutated.fitness) == 1) found = true;
+                  // console.log([mutated.individu, mutated.fitness]);
+                  console.log(
+                    "Fitness terbaik generasi ke - " +
+                      gen +
+                      " =  " +
+                      Math.max(...mutated.fitness)
+                  );
+                  // if(){
+
+                  // }
+                  // await api
+                  //   .fitness_value(
+                  //     this.generations[gen],
+                  //     this.dummy_data.teachers.length
+                  //   )
+                  //   .then(fitness_value => {
+                  //     if()
+                  //   });
+                });
+            });
+        }
       }
       this.isloading = false;
       var t1 = performance.now();

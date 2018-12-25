@@ -37,7 +37,7 @@ async function initialize(data, populations) {
                 } else {
                   start = randomize(0, 7);
                 } // karena ada 12 slot waktu
-                end = start + Number(element.credit) - 2;
+                end = start + Number(element.credit) - 2 - 1;
                 subject = Number(element.id);
                 teacher =
                   element.teachers[randomize(0, element.teachers.length)];
@@ -50,7 +50,7 @@ async function initialize(data, populations) {
               } else {
                 start = randomize(0, 7);
               } // karena ada 12 slot waktu
-              end = start + Number(element.credit);
+              end = start + Number(element.credit) - 1;
               subject = Number(element.id);
               teacher = element.teachers[randomize(0, element.teachers.length)];
               slot.push([a, j, k, day, start, end, subject, teacher]);
@@ -77,7 +77,7 @@ async function initialize(data, populations) {
                 } else {
                   start = randomize(0, 7);
                 } // karena ada 12 slot waktu
-                end = start + Number(element.credit) - 2;
+                end = start + Number(element.credit) - 2 - 1;
                 subject = Number(element.id);
                 teacher =
                   element.teachers[randomize(0, element.teachers.length)];
@@ -90,7 +90,7 @@ async function initialize(data, populations) {
               } else {
                 start = randomize(0, 7);
               } // karena ada 12 slot waktu
-              end = start + Number(element.credit);
+              end = start + Number(element.credit) - 1;
               subject = Number(element.id);
               teacher = element.teachers[randomize(0, element.teachers.length)];
               slot.push([a, j, k, day, start, end, subject, teacher]);
@@ -124,10 +124,11 @@ async function initialize(data, populations) {
 
 async function fitness_value(population, teachers_length) {
   var fitness_value = [];
-
+  // console.log(population);
   await population.forEach(individu => {
     fitness_value.push(fitness_evaluation(individu, teachers_length));
   });
+  // console.log(fitness_value);
   return new Promise((resolve, reject) => {
     resolve(fitness_value);
   });
@@ -162,7 +163,7 @@ function fitness_evaluation(individu, teachers_length) {
         end = slot_guru[5],
         subject = slot_guru[6],
         guru = slot_guru[7],
-        credit = Number(end) - start;
+        credit = Number(end) - start + 1;
       totalCredit += credit;
 
       if (subject == 8 && start > 4) {
@@ -261,21 +262,20 @@ function crossover(cr, individu, selected) {
     selected_individu = [], // index [index_individu,...] untuk generasi baru
     cut_point = Math.floor(individu.length * (cr / 100)),
     r_acak = []; // menyimpan bilangan acak sesuai seleceted[index]
-
   while (r_acak.length < selected.length) {
     r_acak.push(Math.random() * (1 - 0) + 0);
   }
 
-  while (new_parent.length < cut_point) {
-    r_acak.forEach((acak, index) => {
-      // console.log(acak.toFixed(4))
-      if (acak < cr / 100) {
-        new_parent.push(individu[index]);
-      } else {
-        offspring.push(individu[index]);
-      }
-    });
-  }
+  // while (new_parent.length < cut_point) {
+  r_acak.forEach((acak, index) => {
+    // console.log(acak.toFixed(4))
+    if (acak < cr / 100) {
+      new_parent.push(individu[index]);
+    } else {
+      offspring.push(individu[index]);
+    }
+  });
+  // }
 
   // while (offspring.length < selected.length) {
   new_parent.forEach((parent, index) => {
@@ -286,8 +286,10 @@ function crossover(cr, individu, selected) {
       parent.length
     );
     offspring.push(parent_1.concat(parent_2));
-    // console.log([parent_1, parent_2, parent_1.length + parent_2.length])
   });
+
+  // console.log("crossover ", [cr, individu, selected, new_parent, offspring]);
+
   // }
   // console.log([
   //   Math.floor(cut_point),
@@ -307,41 +309,92 @@ function mutation(individu, data, mr) {
   // [a, j, k, day, start, end, subject, teacher]
   // gen yang akan dimutasi adalah [start, teacher] dengan key subject, kelas dan angkatan
   var individu_mutated = individu,
-    fitness_value = [];
+    mutated_fitness = [];
   var gen_length = individu.length * individu[0].length * 3; // populasi * 624 * 3
   var subjects = data.subjects;
+  // console.log(
+  //   individu_mutated,
+  //   gen_length,
+  //   Math.floor(gen_length * (mr / 100))
+  // );
+  for (let i = 0; i < Math.floor(gen_length * (mr / 100)); i++) {
+    var rand = randomize(0, gen_length);
+    var counter = 0;
+    // console.log(rand);
+    for (let i = 0; i < individu.length; i++) {
+      for (let j = 0; j < individu[0].length; j++) {
+        for (let k = 0; k < 3; k++) {
+          if (counter++ == rand) {
+            var day = randomize(0, 4);
+            // console.log('Individu before', individu_mutated[i][j])
+            switch (k) {
+              case 0:
+                k = 3; // day
+                individu_mutated[i][j][k] = day;
+                // console.log('Individu after *day', individu_mutated[i][j])
+                break;
+              case 1:
+                k = 4;
 
-  // while (gen_length * (mr / 100)) {
-  var rand = randomize(0, gen_length - 1);
-  var position = []
-  var counter = 0
-  for (let i = 0; i < individu.length; i++) {
-    for (let j = 0; j < individu[0].length; j++) {
-      for (let k = 0; k < 3; k++) {
-          if( counter++ == rand) position = [i, j, k]
+                var start = individu_mutated[i][j][k];
+                var end = individu_mutated[i][j][k + 1];
+                var credits = end - start + 1;
+
+                if (day == 1) {
+                  start = randomize(0, 6);
+                } else {
+                  start = randomize(0, 7);
+                }
+
+                individu_mutated[i][j][k] = start;
+                individu_mutated[i][j][k + 1] = start + credits - 1; //end
+                // console.log('Individu after *start', individu_mutated[i][j])
+                break;
+              case 2:
+                k = 7; // teacher
+                var subject_id = individu_mutated[i][j][k - 1];
+                var mutated_teachers = function(subjects_data, subject_id) {
+                  var result = [];
+                  var found = false;
+                  for (const jenis_mapel in subjects_data) {
+                    subjects_data[jenis_mapel].forEach(mapel => {
+                      if (mapel.id == subject_id) {
+                        result = mapel.teachers;
+                        found = true;
+                      }
+                    });
+                    if (true) break;
+                  }
+                  result = result[randomize(0, result.length)];
+                  return result;
+                };
+                individu_mutated[i][j][k] = mutated_teachers(
+                  subjects,
+                  subject_id
+                );
+                // console.log('Individu after *teacher', individu_mutated[i][j])
+                break;
+            }
+          }
+        }
       }
     }
   }
-  console.log([individu, individu[0], rand]);
-  console.log(position);
-  switch (position[2]) {
-    case 1:
-    position[2] = 3;
-      break;
-    case 2:
-    position[2] = 4;
-      break;
-    case 3:
-    position[2] = 7;
-      break;
-  }
-  var target = individu_mutated[position[0]][position[1]][position[2]];
-  console.log(target);
-  // }
+  // return new Promise((resolve, reject) => {
+  //   resolve(individu_mutated, mutated_fitness);
+  // });
 
-  return new Promise((resolve, reject) => {
-    resolve(individu_mutated, fitness_value);
-  });
+  return fitness_value(individu_mutated, data.teachers.length).then(
+    async fitness_value => {
+      return await new Promise((resolve, reject) => {
+        // console.log(fitness_value);
+        resolve({
+          individu: individu_mutated,
+          fitness: fitness_value
+        });
+      });
+    }
+  );
 }
 
 /**
@@ -350,9 +403,9 @@ function mutation(individu, data, mr) {
  * Fungsi akan mengembalikan nilai berupa array list guru
  * @param {Referensi id subject} subjectCode
  */
-function getTeachersBySubjectCode(subjectCode) {
-  return data.teachers.filter(teacher => teacher.subject == subjectCode);
-}
+// function getTeachersBySubjectCode (subjectCode, data) {
+//   return data.teachers.filter(teacher => teacher.subject == subjectCode)
+// }
 
 /**
  * Fungsi untuk mencari nilai random berdasarkan rentang nilai
