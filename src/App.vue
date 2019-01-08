@@ -23,7 +23,7 @@
             <v-btn @click="start_scheduling" round dark large color="#9575CD">Start Scheduling
               <v-icon>slideshow</v-icon>
             </v-btn>
-            <v-btn round dark large color="red lighten-1">Reset
+            <v-btn round dark large color="red lighten-1" @click="reset_data()">Reset
               <v-icon>cancel</v-icon>
             </v-btn>
           </v-layout>
@@ -67,9 +67,9 @@ export default {
   name: "App",
   data: () => {
     return {
-      pops: 0,
+      pops: 20,
       cr: 85,
-      mr: 0.5,
+      mr: 1,
       max_gen: 1,
       isloading: false,
       consoleMessage: new Array(),
@@ -144,21 +144,10 @@ export default {
                   // console.log([mutated.individu, mutated.fitness]);
                   console.log(
                     "Fitness terbaik generasi ke - " +
-                      gen +
+                     ( gen +1 ) +
                       " =  " +
                       Math.max(...mutated.fitness)
                   );
-                  // if(){
-
-                  // }
-                  // await api
-                  //   .fitness_value(
-                  //     this.generations[gen],
-                  //     this.dummy_data.teachers.length
-                  //   )
-                  //   .then(fitness_value => {
-                  //     if()
-                  //   });
                 });
             });
         }
@@ -181,6 +170,11 @@ export default {
         arr = msg;
         this.consoleMessage.push(arr);
       }
+    },
+    reset_data(){
+      this.consoleMessage=  []
+      this.generations=  []
+      this.fitness_value=  []
     }
   }
 };
