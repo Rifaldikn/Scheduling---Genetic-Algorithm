@@ -74,7 +74,9 @@ export default {
       isloading: false,
       consoleMessage: new Array(),
       generations: new Array(),
-      fitness_value: new Array()
+      fitness_value: new Array(),
+      best_fitness_value: new Array(),
+      best_individu: {}
     };
   },
   components: {
@@ -144,10 +146,16 @@ export default {
                   // console.log([mutated.individu, mutated.fitness]);
                   console.log(
                     "Fitness terbaik generasi ke - " +
-                     ( gen +1 ) +
+                      (gen + 1) +
                       " =  " +
                       Math.max(...mutated.fitness)
                   );
+                  const best = Math.max(...mutated.fitness);
+                  this.best_fitness_value.push(best);
+                  this.best_individu = {
+                    fitnessValue: best,
+                    individu: mutated.individu[mutated.fitness.indexOf(best)]
+                  };
                 });
             });
         }
@@ -171,10 +179,12 @@ export default {
         this.consoleMessage.push(arr);
       }
     },
-    reset_data(){
-      this.consoleMessage=  []
-      this.generations=  []
-      this.fitness_value=  []
+    reset_data() {
+      this.consoleMessage = [];
+      this.generations = [];
+      this.fitness_value = [];
+      this.best_fitness_value = [];
+      this.best_individu = {};
     }
   }
 };
