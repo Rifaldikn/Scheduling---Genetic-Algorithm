@@ -46,6 +46,7 @@
               </div>
             </v-container>
           </v-flex>
+
           <v-flex>
             <timeTable></timeTable>
           </v-flex>
@@ -76,7 +77,12 @@ export default {
       generations: new Array(),
       fitness_value: new Array(),
       best_fitness_value: new Array(),
-      best_individu: {}
+      best_individu: {
+        fitnessValue: 0,
+        individu: [],
+        generation: 0,
+        index: 0
+      }
     };
   },
   components: {
@@ -152,16 +158,24 @@ export default {
                   );
                   const best = Math.max(...mutated.fitness);
                   this.best_fitness_value.push(best);
-                  this.best_individu = {
-                    fitnessValue: best,
-                    individu: mutated.individu[mutated.fitness.indexOf(best)]
-                  };
+
+                  if (best > this.best_individu.fitnessValue) {
+                    this.best_individu = {
+                      fitnessValue: best,
+                      individu: mutated.individu[mutated.fitness.indexOf(best)],
+                      generation: gen,
+                      index: mutated.fitness.indexOf(best)
+                    };
+                  }
                 });
             });
         }
       }
       this.isloading = false;
       var t1 = performance.now();
+      await api.parsingArr(this.best_individu.individu).then((parsed) => {
+        console.log(parsed)
+      });
       console.log(
         "Scheduling Process took " + ((t1 - t0) / 1000).toFixed(4) + " seconds."
       );

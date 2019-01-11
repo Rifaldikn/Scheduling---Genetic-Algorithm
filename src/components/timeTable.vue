@@ -54,12 +54,12 @@
           </thead>
           <tbody>
             <tr>
-              <th>1</th>
+              <th></th>
               <th scope="row">6:45 am</th>
               <td colspan="27" align="center">UPACARA BENDERA</td>
             </tr>
             <tr>
-              <th>2</th>
+              <th></th>
               <th scope="row">
                 7:35:00
                 am
@@ -67,21 +67,21 @@
               <td colspan="27" align="center">SHOLAT DHUHA, ISTIRAHAT &amp; RAPAT RUTIN</td>
             </tr>
             <tr>
-              <th>3</th>
+              <th>1</th>
               <th scope="row">
                 8:25:00
                 am
               </th>
             </tr>
             <tr>
-              <th>4</th>
+              <th>2</th>
               <th scope="row">
                 9:10:00
                 am
               </th>
             </tr>
             <tr>
-              <th>5</th>
+              <th></th>
               <th scope="row">
                 9:55:00
                 am
@@ -89,21 +89,21 @@
               <td colspan="27" align="center">ISTIRAHAT</td>
             </tr>
             <tr>
-              <th>6</th>
+              <th>3</th>
               <th scope="row">
                 10:15:00
                 am
               </th>
             </tr>
             <tr>
-              <th>7</th>
+              <th>4</th>
               <th scope="row">
                 11:00:00
                 am
               </th>
             </tr>
             <tr>
-              <th>8</th>
+              <th></th>
               <th scope="row">
                 11:45:00
                 am
@@ -111,28 +111,28 @@
               <td colspan="27" align="center">ISTIRAHAT DZUHUR</td>
             </tr>
             <tr>
-              <th>9</th>
+              <th>5</th>
               <th scope="row">
                 12:25:00
                 am
               </th>
             </tr>
             <tr>
-              <th>10</th>
+              <th>6</th>
               <th scope="row">
                 13:10:00
                 am
               </th>
             </tr>
             <tr>
-              <th>11</th>
+              <th>7</th>
               <th scope="row">
                 13:55:00
                 am
               </th>
             </tr>
             <tr>
-              <th>12</th>
+              <th>8</th>
               <th scope="row">
                 14:40:00
                 am
@@ -146,7 +146,7 @@
         <table xs12>
           <thead>
             <tr>
-              <th scope="col" rowspan="2" colspan="2">Senin</th>
+              <th scope="col" rowspan="2" colspan="2">Selasa</th>
               <th colspan="9">X</th>
               <th colspan="9">XI</th>
               <th colspan="9">XII</th>
@@ -195,40 +195,40 @@
           </thead>
           <tbody>
             <tr>
-              <th>1</th>
+              <th></th>
               <th scope="row">6:45 am</th>
               <td colspan="27" align="center">SHOLAT DHUHA</td>
             </tr>
             <tr>
-              <th>2</th>
+              <th>1</th>
               <th scope="row">
                 7:00:00
                 am
               </th>
             </tr>
             <tr>
-              <th>3</th>
+              <th>2</th>
               <th scope="row">
                 7:45:00
                 am
               </th>
             </tr>
             <tr>
-              <th>4</th>
+              <th>3</th>
               <th scope="row">
                 8:30:00
                 am
               </th>
             </tr>
             <tr>
-              <th>5</th>
+              <th>4</th>
               <th scope="row">
                 9:15:00
                 am
               </th>
             </tr>
             <tr>
-              <th>6</th>
+              <th></th>
               <th scope="row">
                 10:00:00
                 am
@@ -236,21 +236,21 @@
               <td colspan="27" align="center">ISTIRAHAT</td>
             </tr>
             <tr>
-              <th>7</th>
+              <th>5</th>
               <th scope="row">
                 10:20:00
                 am
               </th>
             </tr>
             <tr>
-              <th>8</th>
+              <th>6</th>
               <th scope="row">
                 11:05:00
                 am
               </th>
             </tr>
             <tr>
-              <th>9</th>
+              <th></th>
               <th scope="row">
                 11:50:00
                 am
@@ -258,28 +258,28 @@
               <td colspan="27" align="center">ISTIRAHAT DZUHUR</td>
             </tr>
             <tr>
-              <th>10</th>
+              <th>7</th>
               <th scope="row">
                 12:30:00
                 am
               </th>
             </tr>
             <tr>
-              <th>11</th>
+              <th>8</th>
               <th scope="row">
                 13:15:00
                 am
               </th>
             </tr>
             <tr>
-              <th>12</th>
+              <th>9</th>
               <th scope="row">
                 14:00:00
                 am
               </th>
             </tr>
             <tr>
-              <th>13</th>
+              <th>10</th>
               <th scope="row">
                 14:45:00
                 am
@@ -341,40 +341,40 @@
           </thead>
           <tbody>
             <tr>
-              <th>1</th>
+              <th></th>
               <th scope="row">6:45 am</th>
               <td colspan="27" align="center">SHOLAT DHUHA</td>
             </tr>
             <tr>
-              <th>2</th>
+              <th>1</th>
               <th scope="row">
                 7:00:00
                 am
               </th>
             </tr>
             <tr>
-              <th>3</th>
+              <th>2</th>
               <th scope="row">
                 7:45:00
                 am
               </th>
             </tr>
             <tr>
-              <th>4</th>
+              <th>3</th>
               <th scope="row">
                 8:30:00
                 am
               </th>
             </tr>
             <tr>
-              <th>5</th>
+              <th>4</th>
               <th scope="row">
                 9:15:00
                 am
               </th>
             </tr>
             <tr>
-              <th>6</th>
+              <th></th>
               <th scope="row">
                 10:00:00
                 am
@@ -382,21 +382,21 @@
               <td colspan="27" align="center">ISTIRAHAT</td>
             </tr>
             <tr>
-              <th>7</th>
+              <th>5</th>
               <th scope="row">
                 10:20:00
                 am
               </th>
             </tr>
             <tr>
-              <th>8</th>
+              <th>6</th>
               <th scope="row">
                 11:05:00
                 am
               </th>
             </tr>
             <tr>
-              <th>9</th>
+              <th></th>
               <th scope="row">
                 11:50:00
                 am
@@ -404,28 +404,28 @@
               <td colspan="27" align="center">SHOLAT JUMMAT</td>
             </tr>
             <tr>
-              <th>10</th>
+              <th>7</th>
               <th scope="row">
                 12:50:00
                 am
               </th>
             </tr>
             <tr>
-              <th>11</th>
+              <th>8</th>
               <th scope="row">
                 13:35:00
                 am
               </th>
             </tr>
             <tr>
-              <th>12</th>
+              <th>9</th>
               <th scope="row">
                 14:20:00
                 am
               </th>
             </tr>
             <tr>
-              <th>13</th>
+              <th>10</th>
               <th scope="row">
                 15:05:00
                 am
